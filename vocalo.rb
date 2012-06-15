@@ -7,13 +7,11 @@ class VocaloMovieData
   # 初期化
   def initialize()
     @name = ""
-    @releace = ""
+    @releace = Time.new
     @hall_of_fame = ""
     @musician = ""
     @id = ""
     @vocal = ""
-    
-    self
   end
   
   # 曲名の抽出
@@ -47,7 +45,7 @@ class VocaloMovieData
     @name = simply_name(str)
   end
   
-  def set_releace(str)
+  def str_to_time(str)
     str =~ /^\d{4}年\d{2}月\d{2}日 \d{2}:\d{2}/
     t_str = $~.to_s + "n"
     year = /\d{4}/.match(t_str).to_a[0]
@@ -55,12 +53,16 @@ class VocaloMovieData
     day = /\d{2}日/.match(t_str).to_a[0]
     hour = /\d{2}:/.match(t_str).to_a[0]
     min = /\d{2}n/.match(t_str).to_a[0]
-    @releace = Time.local(year, mon, day, hour, min)
+    Time.local(year, mon, day, hour, min)
+  end
+  
+  def set_releace(str)
+    @releace = str_to_time(str)
   end
   
   def set_else(str)
     ary = str.split(/,[\s]*/)
-    @hall_of_fame = ary[0]
+    @hall_of_fame = str_to_time(ary[0])
     @musician = ary[1]
     @vocal = ary[2]
     str =~ /[sn][mo]\d*/
@@ -69,22 +71,22 @@ class VocaloMovieData
   end
   
 # getter
-  def getid
+  def get_id
     @id
   end
-  def gethalldate
+  def get_halldate
     @hall_of_fame
   end
-  def getmusician
+  def get_musician
     @musician
   end
-  def getname
+  def get_name
     @name
   end
-  def getvocal
+  def get_vocal
     @vocal
   end
-  def getreleace
+  def get_releace
     @releace
   end
 end
@@ -110,14 +112,14 @@ class MusicDataList
   
   def create_table(musicdata)
     str = "<tr>
-<td><iframe class=\"nicovideo\" src=\"http://ext.nicovideo.jp/thumb/#{musicdata.getid}\" 
+<td><iframe class=\"nicovideo\" src=\"http://ext.nicovideo.jp/thumb/#{musicdata.get_id}\" 
 frameborder=\"0\" height=\"176\" scrolling=\"no\" width=\"312\"></iframe></td>
 <td style=\"vertical-align: middle;\">
 <ul>
-<li>#{musicdata.getid}</li>
-<li>#{musicdata.gethalldate}</li>
-<li>#{musicdata.getmusician}</li>
-<li>#{musicdata.getvocal}</li>
+<li>#{musicdata.get_id}</li>
+<li>#{musicdata.get_halldate}</li>
+<li>#{musicdata.get_musician}</li>
+<li>#{musicdata.get_vocal}</li>
 </ul>
 </td>
 </tr>\n"  
@@ -127,10 +129,10 @@ frameborder=\"0\" height=\"176\" scrolling=\"no\" width=\"312\"></iframe></td>
   def calender_table(musicdata)
 "\n\n<tr style=\"border-bottom: 1px dotted #cccccc;\">
 <td style=\"width: 95px; vertical-align: middle; border-style: none;\">
-<a style=\"background-image: none;\" href=\"http://www.nicovideo.jp/watch/#{musicdata.getid}\" rel=\"nofollow\" target=\"_blank\">
-<img style=\"width: 91px; height: 70px;\" src=\"http://tn-skr.smilevideo.jp/smile?i=#{(musicdata.getid).slice(2..10)}\" /></a></td>
+<a style=\"background-image: none;\" href=\"http://www.nicovideo.jp/watch/#{musicdata.get_id}\" rel=\"nofollow\" target=\"_blank\">
+<img style=\"width: 91px; height: 70px;\" src=\"http://tn-skr.smilevideo.jp/smile?i=#{(musicdata.get_id).slice(2..10)}\" /></a></td>
 <td style=\"border-style: none; vertical-align: middle; line-height: normal;\">
-<div>#{musicdata.getreleace}<br /> #{musicdata.getname}<br /> #{musicdata.getmusician}<br /> #{musicdata.getvocal}</div>
+<div>#{musicdata.get_releace}<br /> #{musicdata.get_name}<br /> #{musicdata.get_musician}<br /> #{musicdata.get_vocal}</div>
 </td>
 </tr>\n\n"
     end
@@ -138,7 +140,7 @@ frameborder=\"0\" height=\"176\" scrolling=\"no\" width=\"312\"></iframe></td>
   def to_table
     str = ""
     @list.sort{|a, b|
-      (b.gethalldate <=> a.gethalldate)
+      (b.get_halldate <=> a.get_halldate)
     }.each{|musicdata|
       str += create_table(musicdata)
     }
@@ -148,7 +150,7 @@ frameborder=\"0\" height=\"176\" scrolling=\"no\" width=\"312\"></iframe></td>
   def to_calender
     str = ""
     @list.sort{|a, b|
-      a.getreleace <=> b.getreleace
+      a.get_releace <=> b.get_releace
     }.each{|musicdata|
       str += calender_table(musicdata)
     }
