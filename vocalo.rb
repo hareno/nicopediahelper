@@ -1,5 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 #! /usr/bin/ruby
+require 'kconv'
 
 class VocaloMovieData
   
@@ -17,13 +18,25 @@ class VocaloMovieData
   
   # 曲名の抽出
   def simply_name(str)
-    if str =~ /【/
+    str = str.toutf8
+    if str =~ /【.*【/
+      str.gsub!(/^[ \s]*【[^【]*】/, "")
+      str.gsub!(/[ \s]*【.*】.*/, "")
+      str.lstrip!
+    elsif str =~ /【/
       str.gsub!(/[　\s]*【[^【]*】[　\s]*/, "")
       str.lstrip!
     end
-    if str =~ /[「]/
+    if str =~ /[\[「『].*[「『\]]/
+      str.sub!(/^[\[「『][^\[「『]*[」』\]][ 　\s]*/, "")
+      str.gsub!(/[ 　\s]*[\[「『].*[」』\]].*/, "")
+      str.lstrip!
+    elsif str =~ /[「]/
       str.sub!(/.*「/, "")
       str.sub!(/」/, "")
+    end
+    if str =~ /feat[.] /
+      str.sub!(/[ \s]*feat[.] .*/, "")
     end
     str.chomp!
     return str
@@ -36,7 +49,13 @@ class VocaloMovieData
   
   def set_releace(str)
     str =~ /^\d{4}年\d{2}月\d{2}日 \d{2}:\d{2}/
-    @releace = $~.to_s
+    t_str = $~.to_s + "n"
+    year = /\d{4}/.match(t_str).to_a[0]
+    mon = /\d{2}月/.match(t_str).to_a[0]
+    day = /\d{2}日/.match(t_str).to_a[0]
+    hour = /\d{2}:/.match(t_str).to_a[0]
+    min = /\d{2}n/.match(t_str).to_a[0]
+    @releace = Time.local(year, mon, day, hour, min)
   end
   
   def set_else(str)
