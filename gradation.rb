@@ -2,10 +2,22 @@
 
 class Color
     
-  def initialize(str = "")
-    case str
-    when "white"
-      @red, @gre, @blu = 255, 255, 255
+  def initialize(arg = "")
+    if arg.class == String.new.class
+      case arg
+      when "white"
+        @red, @gre, @blu = 255, 255, 255
+      when "red"
+        @red, @gre, @blu = 255, 0, 0
+      when "green"
+        @red, @gre, @blu = 0, 255, 0
+      when "blue"
+        @red, @gre, @blu = 0, 0, 255
+      else
+        @red, @gre, @blu = 0, 0, 0
+      end
+    elsif arg.class == Array.new.class
+      @red, @gre, @blu = arg.map{|item| item.to_i }
     else
       @red, @gre, @blu = 0, 0, 0
     end
@@ -25,12 +37,12 @@ class Color
     
     rary = grad_ary(get_r, color2.get_r, size)
     gary = grad_ary(get_g, color2.get_g, size)
-    bary = grad_ary(get_g, color2.get_b, size)
+    bary = grad_ary(get_b, color2.get_b, size)
     
     ary = Array.new(size)
     
     size.times{|i|
-      ary[i] = "#" + rary[i].to_s(16) + gary[i].to_s(16) + bary[i].to_s(16)
+      ary[i] = sprintf("#%02x%02x%02x", rary[i], gary[i], bary[i])
     }
     ary
   end
