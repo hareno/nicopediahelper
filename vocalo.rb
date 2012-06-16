@@ -1,7 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 #! /usr/bin/ruby
 require 'kconv'
-load './nico.rb'
+load './niconico.rb'
 
 class VocaloMovieData
   
@@ -152,7 +152,7 @@ class MusicDataList
 
 "\n\n<tr style=\"border-bottom: 1px dotted #cccccc;\"><td style=\"width: 
 95px; vertical-align: middle; border-style: 
-none;\">#{NicoNico::get_thumb(musicdata.get_id)}</td>
+none;\">#{NicoNico::get_thumb(musicdata.get_id, 91, 70)}</td>
 <td style=\"border-style: none; 
 vertical-align: middle; line-height: 
 normal;\">
