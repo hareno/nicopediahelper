@@ -8,7 +8,7 @@ class VocaloMovieData
   def initialize()
     @name = ""
     @releace = Time.new
-    @hall_of_fame = ""
+    @hall_of_fame = Time.new
     @musician = ""
     @id = ""
     @vocal = ""
@@ -75,7 +75,7 @@ class VocaloMovieData
     @id
   end
   def get_halldate
-    @hall_of_fame
+    @hall_of_fame.strftime("%Y年%m月%d日 %H:%M")
   end
   def get_musician
     @musician
@@ -87,28 +87,50 @@ class VocaloMovieData
     @vocal
   end
   def get_releace
-    @releace
+    @releace.strftime("%Y年%m月%d日 %H:%M")
   end
 end
 
+
 class MusicDataList
-  
-  def initialize()
+
+  def initialize
     @list = Array.new
   end
   
-  def add(musicdata)
-    @list << musicdata
+  def add(m)
+    if m.class != VocaloMovieData.new.class
+      raise m.to_s+" is not VocaloMovieData class."
+    end
+    @list << m
+    m
   end
   
-  def sort_hall
+  def readfile(filename)
+    f = IO.readlines(filename)
+    f.map!{|str|
+      str.toutf8
+    }
+    n = 0
+    
+    f.length.times{|i|
+      if f[i].to_s =~ /^宣伝する/
+        n = i - 1
+        break
+      end
+    }
+    
+    n.step(f.length, 15) {|index|
+      break if f[index+14].to_s == ""
+      m = VocaloMovieData.new
+      m.set_name(f[index + 3])
+      m.set_releace(f[index + 12])
+      m.set_else(f[index + 14])
+      add(m)
+    }
+    
     @list
   end
-end
-
-
-class MusicDataList
-  @list = Array.new
   
   def create_table(musicdata)
     str = "<tr>
@@ -160,38 +182,17 @@ frameborder=\"0\" height=\"176\" scrolling=\"no\" width=\"312\"></iframe></td>
 end
 
 
-if __FILE__ == "vocalo.rb"
-  if ARGV[0]
-    readfile = ARGV[0].to_s
-  else
-    raise "args error: need 1 or 2 args."
-  end
-  
-  f = IO.readlines(readfile)
-
+def main(rfile, wfile = "table.txt")
   list = MusicDataList.new
+  list.readfile(rfile)
   
-  0.step(f.length, 15) {|index|
-    break if f[index+14].to_s == ""
-    m = VocaloMovieData.new
-    m.set_name(f[index + 3])
-    m.set_releace(f[index + 12])
-    m.set_else(f[index + 14])
-    list.add(m)
-  }
-  
-  str = list.to_calender
-  
-  open((ARGV[1] || "calender.txt"), "w"){|f|
+  open(wfile, "w"){|f|
     list.to_table.each_line{|line|
-      f << line
+      f << line.tosjis
     }
-    
     f << "\n\n"
-    
-    str.each_line{|line|
-      f << line
+    list.to_calender.each_line{|line|
+      f << line.tosjis
     }
   }
-  
 end
