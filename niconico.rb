@@ -1,7 +1,7 @@
 ﻿# -*- encoding: utf-8 -*-
 #!/usr/bin/ruby
 
-class NicoNico
+module NicoNico
 
   def self.get_videoiframe(id, height = 176, width = 312)
 "<iframe class=\"nicovideo\" 
@@ -19,4 +19,5 @@ rel=\"nofollow\" target=\"_blank\">
 <img style=\"width: #{width}px; height: #{height}px;\" 
 src=\"http://tn-skr.smilevideo.jp/smile?i=#{id.slice(2..10)}\" /></a>"
   end
+  
 end
