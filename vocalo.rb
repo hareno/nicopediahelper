@@ -1,6 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 #! /usr/bin/ruby
 require 'kconv'
+load './nico.rb'
 
 class VocaloMovieData
   
@@ -134,8 +135,7 @@ class MusicDataList
   
   def create_table(musicdata)
     str = "<tr>
-<td><iframe class=\"nicovideo\" src=\"http://ext.nicovideo.jp/thumb/#{musicdata.get_id}\" 
-frameborder=\"0\" height=\"176\" scrolling=\"no\" width=\"312\"></iframe></td>
+<td>#{NicoNico::get_videoiframe(musicdata.get_id)}</td>
 <td style=\"vertical-align: middle;\">
 <ul>
 <li>#{musicdata.get_id}</li>
@@ -149,15 +149,18 @@ frameborder=\"0\" height=\"176\" scrolling=\"no\" width=\"312\"></iframe></td>
   end
   
   def calender_table(musicdata)
-"\n\n<tr style=\"border-bottom: 1px dotted #cccccc;\">
-<td style=\"width: 95px; vertical-align: middle; border-style: none;\">
-<a style=\"background-image: none;\" href=\"http://www.nicovideo.jp/watch/#{musicdata.get_id}\" rel=\"nofollow\" target=\"_blank\">
-<img style=\"width: 91px; height: 70px;\" src=\"http://tn-skr.smilevideo.jp/smile?i=#{(musicdata.get_id).slice(2..10)}\" /></a></td>
-<td style=\"border-style: none; vertical-align: middle; line-height: normal;\">
-<div>#{musicdata.get_releace}<br /> #{musicdata.get_name}<br /> #{musicdata.get_musician}<br /> #{musicdata.get_vocal}</div>
-</td>
-</tr>\n\n"
-    end
+
+"\n\n<tr style=\"border-bottom: 1px dotted #cccccc;\"><td style=\"width: 
+95px; vertical-align: middle; border-style: 
+none;\">#{NicoNico::get_thumb(musicdata.get_id)}</td>
+<td style=\"border-style: none; 
+vertical-align: middle; line-height: 
+normal;\">
+<div>#{musicdata.get_releace}<br /> #{musicdata.get_name}<br 
+/> #{musicdata.get_musician}<br /> 
+#{musicdata.get_vocal}</div></td></tr>\n\n"
+
+  end
   
   def to_table
     str = ""
@@ -191,8 +194,6 @@ def main(rfile, wfile = "table.txt")
       f << line.tosjis
     }
     f << "\n\n"
-    list.to_calender.each_line{|line|
-      f << line.tosjis
-    }
+    f << list.to_calender.tosjis
   }
 end
