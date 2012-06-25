@@ -185,7 +185,7 @@ normal;\">
 end
 
 
-def main(rfile, wfile = "table.txt")
+def main(rfile, wfile = "output.txt")
   list = MusicDataList.new
   list.readfile(rfile)
   
@@ -196,4 +196,12 @@ def main(rfile, wfile = "table.txt")
     f << "\n\n"
     f << list.to_calender.tosjis
   }
+end
+
+if __FILE__ == "vocalo.rb"
+  
+  raise "args error: #{ARGV.size}" if ARGV.size < 1
+  
+  main(ARGV[0], "output.txt")
+  
 end
