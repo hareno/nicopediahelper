@@ -185,27 +185,25 @@ normal;\">
 end
 
 
-def main(rfile, wfile = "output.txt")
+def main(rfile, wfile = "")
+  
   list = MusicDataList.new
   list.readfile(rfile)
   
-  open(wfile, "w"){|f|
-    list.to_table.each_line{|line|
-      f << line.tosjis
-    }
-    f << "\n\n"
-    f << list.to_calender.tosjis
-  }
+  unless wfile == ""
+    $stdout = open(wfile, "w")
+  end
+
+  print list.to_table
+  print "\n\n"
+  print list.to_calender
+  
+  $stdout = STDOUT
 end
 
 if __FILE__ == "vocalo.rb"
   
-  raise ArgumentError, "args error: #{ARGV.size}" if ARGV.size < 1
+  raise ArgumentError, "args error: #{ARGV.size} for 1" if ARGV.size < 1
   
-  if ARGV.size == 1
-    main(ARGV[0])
-  else
-    main(ARGV[0], ARGV[1])
-  end
-  
+  main(ARGV[0])
 end
