@@ -200,8 +200,12 @@ end
 
 if __FILE__ == "vocalo.rb"
   
-  raise "args error: #{ARGV.size}" if ARGV.size < 1
+  raise ArgumentError, "args error: #{ARGV.size}" if ARGV.size < 1
   
-  main(ARGV[0], "output.txt")
+  if ARGV.size == 1
+    main(ARGV[0])
+  else
+    main(ARGV[0], ARGV[1])
+  end
   
 end
