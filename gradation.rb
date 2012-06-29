@@ -28,7 +28,7 @@ module Gradation
   end
   
   def create_grad(color1, color2 = Color.new("white"),
-    wide = 10, size = 10, type = "length")
+    wide = 5, size = 20, type = "length")
     
     ary = grad_colors(color1, color2, size)
     str = ""
@@ -36,11 +36,11 @@ module Gradation
     case type
     when "length"
       ary.each{|item|
-        str += "<div style=\"background-color: #{item};\"><div style=\"height: #{wide}px;\"></div>\n"
+        str += "<div style=\"padding-top: #{wide}px; background-color: #{item};\">\n"
       }
     when "cross"
       ary.each{|item|
-        str += "<div style=\"margin-left: #{wide}px; background-color: #{item};\">\n"
+        str += "<div style=\"padding-left: #{wide}px; background-color: #{item};\">\n"
       }
     else
       ary.each{|item|
@@ -59,8 +59,7 @@ if __FILE__ == "gradation.rb"
   
   color1 = Color.new(ARGV[0])
   
-  str = create_grad(color1, Color.new("white"),
-             10, 10, "else")
+  str = create_grad(color1, Color.new("white"))
   
   print str
   
